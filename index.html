@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل طلاب المعهد التقاني الهندسي</title>
+  <style>
+    body {
+      font-family: "Cairo", sans-serif;
+      background: #f0f2f5;
+      direction: rtl;
+      text-align: center;
+      padding: 30px;
+    }
+    form, #resultPage {
+      background: #fff;
+      padding: 25px;
+      max-width: 420px;
+      margin: auto;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+      transition: 0.3s;
+    }
+    button:hover { background: #0056b3; }
+    button:disabled {
+      background: #aaa;
+      cursor: not-allowed;
+    }
+    h2 { color: #333; margin-bottom: 20px; }
+
+    .loading {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255, 255, 255, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 15px;
+      font-size: 18px;
+      color: #333;
+      font-weight: bold;
+      display: none;
+    }
+
+    #resultPage {
+      display: none;
+    }
+
+    .link-box {
+      background: #e9f5ff;
+      border: 1px solid #b3e0ff;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    .telegram-link {
+      display: inline-block;
+      background: #0088cc;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .telegram-link:hover {
+      background: #007ab8;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📋 استمارة تسجيل طلاب المعهد التقاني الهندسي في المجموعات الرسمية</h2>
+  
+  <form id="studentForm">
+    <div class="loading" id="loading">⏳ جارٍ إرسال البيانات...</div>
+
+    <input type="text" id="name" placeholder="الاسم الثلاثي" required>
+    <input type="text" id="studentID" placeholder="الرقم الجامعي" required>
+    <input type="tel" id="telegramPhone" placeholder="رقم موبايل التلغرام" required>
+    <input type="text" id="telegramUser" placeholder="يوزر التلغرام">
+    <input type="email" id="email" placeholder="البريد الإلكتروني">
+    
+    <select id="department" required>
+      <option value="">اختر القسم</option>
+      <option value="العمارة">العمارة</option>
+      <option value="المساحة">المساحة</option>
+      <option value="الإنشاءات">الإنشاءات</option>
+      <option value="الصحية والمائية">الصحية والمائية</option>
+    </select>
+
+    <select id="year" required>
+      <option value="">اختر السنة الدراسية</option>
+      <option value="الأولى">الأولى</option>
+      <option value="الثانية">الثانية</option>
+    </select>
+
+    <button type="submit" id="submitBtn">التالي ➜</button>
+  </form>
+
+  <!-- صفحة النتيجة -->
+  <div id="resultPage">
+    <h3>✅ تم حفظ بياناتك بنجاح!</h3>
+    <p>اضغط على الرابط أدناه للانضمام إلى مجموعة قسمك في التلغرام 👇</p>
+    <div class="link-box">
+      <a id="telegramGroupLink" class="telegram-link" href="#" target="_blank">الانضمام إلى المجموعة</a>
+    </div>
+    <button onclick="backToForm()">⬅️ العودة إلى الاستمارة</button>
+  </div>
+
+  <script>
+    // ✅ ضع هنا رابط Google Apps Script (Web App URL)
+    const scriptURL = "https://script.google.com/macros/s/AKfycbyF0qqWYthV2Rt6Upb8zmwAM0hm_q68F3i-l4ou85ASuU8XOB8edvtdJ5TYU7PavcFx_A/exec";
+
+    const form = document.getElementById("studentForm");
+    const loading = document.getElementById("loading");
+    const submitBtn = document.getElementById("submitBtn");
+    const resultPage = document.getElementById("resultPage");
+    const telegramGroupLink = document.getElementById("telegramGroupLink");
+
+    const telegramLinks = {
+      "العمارة": {
+        "الأولى": "https://t.me/+-9YyfrTi02RkZGM8",
+        "الثانية": "https://t.me/+mCTlUfoK2nc4NjE0"
+      },
+      "المساحة": {
+        "الأولى": "https://t.me/+dCHlpX3rWacyY2Zk",
+        "الثانية": "https://t.me/+bqNv7qTvSZxiN2Nk"
+      },
+      "الإنشاءات": {
+        "الأولى": "https://t.me/+giuMhy3-cddiOTJk",
+        "الثانية": "https://t.me/+lJWLUMGhr7BmMWU0"
+      },
+      "الصحية والمائية": {
+        "الأولى": "https://t.me/+B6h00TerdAVhODU0",
+        "الثانية": "https://t.me/+rCAoFKCxPDAyMzBk"
+      }
+    };
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      loading.style.display = "flex";
+      submitBtn.disabled = true;
+
+      const data = {
+        name: document.getElementById("name").value.trim(),
+        studentID: document.getElementById("studentID").value.trim(),
+        telegramPhone: document.getElementById("telegramPhone").value.trim(),
+        telegramUser: document.getElementById("telegramUser").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        department: document.getElementById("department").value,
+        year: document.getElementById("year").value
+      };
+
+      try {
+        const response = await fetch(scriptURL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const text = await response.text();
+        let result;
+        try {
+          result = JSON.parse(text);
+        } catch {
+          result = { status: "success" };
+        }
+
+        loading.style.display = "none";
+        submitBtn.disabled = false;
+
+        if (result.status === "success") {
+          const redirectLink = telegramLinks[data.department]?.[data.year];
+          if (redirectLink) {
+            form.style.display = "none";
+            resultPage.style.display = "block";
+            telegramGroupLink.href = redirectLink;
+          } else {
+            alert("⚠️ لم يتم العثور على مجموعة تلغرام مطابقة لهذا القسم والسنة.");
+          }
+        } else {
+          alert("❌ حدث خطأ أثناء الحفظ، يرجى المحاولة لاحقًا.");
+        }
+
+      } catch (error) {
+        loading.style.display = "none";
+        submitBtn.disabled = false;
+        console.error("Error:", error);
+        alert("⚠️ فشل الاتصال بالخادم. تحقق من إعدادات النشر في Google Apps Script.");
+      }
+    });
+
+    function backToForm() {
+      resultPage.style.display = "none";
+      form.style.display = "block";
+      form.reset();
+    }
+  </script>
+</body>
+</html>
