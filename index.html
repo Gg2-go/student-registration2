@@ -4,15 +4,98 @@
   <meta charset="UTF-8">
   <title>تسجيل طلاب المعهد التقاني الهندسي</title>
   <style>
-    body { font-family: "Cairo", sans-serif; background:#f0f2f5; direction:rtl; text-align:center; padding:30px; }
-    form, #resultPage { background:#fff; padding:25px; max-width:420px; margin:auto; border-radius:15px; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
-    input, select { width:100%; padding:10px; margin:8px 0; border-radius:8px; border:1px solid #ccc; }
-    button { background:#007bff; color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; width:100%; font-size:16px; }
-    button:hover { background:#0056b3; }
-    h2 { color:#333; margin-bottom:20px; }
-    .link-box { background:#e9f5ff; border:1px solid #b3e0ff; padding:15px; border-radius:10px; margin-top:20px; }
-    .telegram-link { display:inline-block; background:#0088cc; color:white; padding:10px 20px; border-radius:10px; text-decoration:none; font-weight:bold; }
-    .telegram-link:hover { background:#007ab8; }
+    /* الخطوط والخلفية */
+    body {
+      font-family: "Cairo", sans-serif;
+      background: linear-gradient(135deg, #f0f2f5, #e0f7ff);
+      direction: rtl;
+      text-align: center;
+      padding: 30px;
+      margin: 0;
+    }
+
+    /* الصندوق الرئيسي */
+    form, #resultPage {
+      background: #ffffff;
+      padding: 30px 25px;
+      max-width: 450px;
+      margin: auto;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    form:hover, #resultPage:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+    }
+
+    /* العناوين */
+    h2, h3 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    /* الحقول */
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      transition: border 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    input:focus, select:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 5px rgba(0,123,255,0.4);
+      outline: none;
+    }
+
+    /* زر الإرسال */
+    button {
+      background: linear-gradient(90deg, #007bff, #00aaff);
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(90deg, #0056b3, #0088cc);
+      transform: translateY(-2px);
+    }
+
+    /* صندوق رابط التلغرام */
+    .link-box {
+      background: #e9f5ff;
+      border: 1px solid #b3e0ff;
+      padding: 15px;
+      border-radius: 15px;
+      margin-top: 20px;
+    }
+
+    .telegram-link {
+      display: inline-block;
+      background: #0088cc;
+      color: white;
+      padding: 12px 25px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .telegram-link:hover {
+      background: #007ab8;
+      transform: translateY(-2px);
+    }
   </style>
 </head>
 <body>
@@ -46,29 +129,16 @@
   <div class="link-box">
     <a id="telegramGroupLink" class="telegram-link" href="#" target="_blank">الانضمام إلى المجموعة</a>
   </div>
-  <button onclick="backToForm()">⬅️ العودة</button>
 </div>
 
 <script>
   const sheetdb_api_url = "https://sheetdb.io/api/v1/87lr2h7mf4k5a"; // غيّر هذا برابطك
 
   const telegramLinks = {
-    "العمارة": {
-      "الأولى": "https://t.me/+-9YyfrTi02RkZGM8",
-      "الثانية": "https://t.me/+mCTlUfoK2nc4NjE0"
-    },
-    "المساحة": {
-      "الأولى": "https://t.me/+dCHlpX3rWacyY2Zk",
-      "الثانية": "https://t.me/+bqNv7qTvSZxiN2Nk"
-    },
-    "الإنشاءات": {
-      "الأولى": "https://t.me/+giuMhy3-cddiOTJk",
-      "الثانية": "https://t.me/+lJWLUMGhr7BmMWU0"
-    },
-    "الصحية والمائية": {
-      "الأولى": "https://t.me/+B6h00TerdAVhODU0",
-      "الثانية": "https://t.me/+rCAoFKCxPDAyMzBk"
-    }
+    "العمارة": { "الأولى": "https://t.me/+-9YyfrTi02RkZGM8", "الثانية": "https://t.me/+vL_6K93_ot4yMGJk" },
+    "المساحة": { "الأولى": "https://t.me/+dCHlpX3rWacyY2Zk", "الثانية": "https://t.me/+bqNv7qTvSZxiN2Nk" },
+    "الإنشاءات": { "الأولى": "https://t.me/+giuMhy3-cddiOTJk", "الثانية": "https://t.me/+lJWLUMGhr7BmMWU0" },
+    "الصحية والمائية": { "الأولى": "https://t.me/+B6h00TerdAVhODU0", "الثانية": "https://t.me/+rCAoFKCxPDAyMzBk" }
   };
 
   const form = document.getElementById("studentForm");
@@ -94,12 +164,7 @@
       alert("❌ حدث خطأ أثناء الحفظ، حاول مجددًا.");
     }
   });
-
-  function backToForm() {
-    resultPage.style.display = "none";
-    form.style.display = "block";
-    form.reset();
-  }
 </script>
+
 </body>
 </html>
