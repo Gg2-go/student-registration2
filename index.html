@@ -3,57 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <title>تسجيل طلاب المعهد التقاني الهندسي</title>
+
   <style>
-    /* الخطوط والخلفية */
     body {
       font-family: "Cairo", sans-serif;
-      background: linear-gradient(135deg, #f0f2f5, #e0f7ff);
+      background: linear-gradient(135deg, #dff2ff, #ffffff);
       direction: rtl;
       text-align: center;
-      padding: 30px;
+      padding: 25px;
       margin: 0;
     }
 
-    /* الصندوق الرئيسي */
     form, #resultPage {
       background: #ffffff;
       padding: 30px 25px;
-      max-width: 450px;
+      max-width: 480px;
       margin: auto;
       border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+      transition: 0.3s;
     }
 
-    form:hover, #resultPage:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
-    }
+    h2 { margin-bottom: 25px; color:#005a8d; }
+    h3 { margin-bottom: 18px; }
 
-    /* العناوين */
-    h2, h3 {
-      color: #333;
-      margin-bottom: 20px;
-    }
-
-    /* الحقول */
     input, select {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       margin: 10px 0;
       border-radius: 12px;
       border: 1px solid #ccc;
-      font-size: 15px;
-      transition: border 0.3s ease, box-shadow 0.3s ease;
+      font-size: 16px;
+      transition: 0.3s;
     }
 
     input:focus, select:focus {
-      border-color: #007bff;
-      box-shadow: 0 0 5px rgba(0,123,255,0.4);
+      border-color: #0088cc;
+      box-shadow: 0 0 6px rgba(0,136,204,0.4);
       outline: none;
     }
 
-    /* زر الإرسال */
     button {
       background: linear-gradient(90deg, #007bff, #00aaff);
       color: white;
@@ -62,13 +51,14 @@
       border-radius: 12px;
       cursor: pointer;
       width: 100%;
-      font-size: 16px;
+      font-size: 17px;
       font-weight: bold;
-      transition: background 0.3s ease, transform 0.2s ease;
+      margin-top: 10px;
+      transition: 0.25s;
     }
 
     button:hover {
-      background: linear-gradient(90deg, #0056b3, #0088cc);
+      background: linear-gradient(90deg, #0066cc, #0099dd);
       transform: translateY(-2px);
     }
 
@@ -76,7 +66,7 @@
     .link-box {
       background: #e9f5ff;
       border: 1px solid #b3e0ff;
-      padding: 15px;
+      padding: 18px;
       border-radius: 15px;
       margin-top: 20px;
     }
@@ -85,16 +75,54 @@
       display: inline-block;
       background: #0088cc;
       color: white;
-      padding: 12px 25px;
+      padding: 13px 25px;
       border-radius: 12px;
       text-decoration: none;
       font-weight: bold;
-      transition: background 0.3s ease, transform 0.2s ease;
+      transition: 0.3s;
     }
 
     .telegram-link:hover {
       background: #007ab8;
       transform: translateY(-2px);
+    }
+
+    /* سبينر التحميل */
+    .loading {
+      width: 35px;
+      height: 35px;
+      border: 4px solid #ddd;
+      border-top: 4px solid #007bff;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin: 10px auto;
+      display: none;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    /* رسالة نجاح */
+    .success-msg {
+      background: #e8ffe8;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: bold;
+      color: #0a7d0a;
+      display: none;
+      margin-bottom: 10px;
+    }
+
+    /* رسالة خطأ */
+    .error-msg {
+      background: #ffe5e5;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: bold;
+      color: #d60000;
+      display: none;
+      margin-bottom: 10px;
     }
   </style>
 </head>
@@ -103,11 +131,20 @@
 <h2>📋 استمارة تسجيل طلاب المعهد التقاني الهندسي</h2>
 
 <form id="studentForm">
+
+  <div class="error-msg" id="errorMessage">⚠ يرجى تعبئة جميع الحقول بشكل صحيح.</div>
+  <div class="success-msg" id="successMessage">⏳ جاري حفظ بياناتك...</div>
+
   <input type="text" name="name" placeholder="الاسم الثلاثي" required>
-  <input type="text" name="studentID" placeholder="الرقم الجامعي" required>
-  <input type="tel" name="telegramPhone" placeholder="رقم موبايل التلغرام" required>
-  <input type="text" name="telegramUser" placeholder="يوزر التلغرام">
-  <input type="email" name="email" placeholder="البريد الإلكتروني">
+
+  <input type="text" name="studentID" placeholder="الرقم الجامعي" required pattern="[0-9]{6,10}" title="الرقم الجامعي يجب أن يكون أرقام فقط">
+
+  <input type="tel" name="telegramPhone" placeholder="رقم موبايل التلغرام" required pattern="[0-9+]{7,15}" title="الرقم يجب أن يحتوي على أرقام فقط">
+
+  <input type="text" name="telegramUser" placeholder="يوزر التلغرام (اختياري)">
+
+  <input type="email" name="email" placeholder="البريد الإلكتروني (اختياري)">
+
   <select name="department" required>
     <option value="">اختر القسم</option>
     <option value="العمارة">العمارة</option>
@@ -115,24 +152,30 @@
     <option value="الإنشاءات">الإنشاءات</option>
     <option value="الصحية والمائية">الصحية والمائية</option>
   </select>
+
   <select name="year" required>
     <option value="">اختر السنة الدراسية</option>
     <option value="الأولى">الأولى</option>
     <option value="الثانية">الثانية</option>
   </select>
+
   <button type="submit">التالي ➜</button>
+
+  <div class="loading" id="loadingSpinner"></div>
+
 </form>
 
 <div id="resultPage" style="display:none;">
-  <h3>✅ تم حفظ بياناتك بنجاح!</h3>
+  <h3>✅ تم حفظ بياناتك بنجاح يا طالبنا العزيز!</h3>
   <p>اضغط على الرابط أدناه للانضمام إلى مجموعة قسمك في التلغرام 👇</p>
+
   <div class="link-box">
     <a id="telegramGroupLink" class="telegram-link" href="#" target="_blank">الانضمام إلى المجموعة</a>
   </div>
 </div>
 
 <script>
-  const sheetdb_api_url = "https://sheetdb.io/api/v1/o3if7qrz8mhg5"; // غيّر هذا برابطك
+  const sheetdb_api_url = "https://sheetdb.io/api/v1/o3if7qrz8mhg5";
 
   const telegramLinks = {
     "العمارة": { "الأولى": "https://t.me/+-9YyfrTi02RkZGM8", "الثانية": "https://t.me/+vL_6K93_ot4yMGJk" },
@@ -145,23 +188,49 @@
   const resultPage = document.getElementById("resultPage");
   const telegramLink = document.getElementById("telegramGroupLink");
 
+  const errorMsg = document.getElementById("errorMessage");
+  const successMsg = document.getElementById("successMessage");
+  const spinner = document.getElementById("loadingSpinner");
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+
+    // إخفاء الرسائل القديمة
+    errorMsg.style.display = "none";
+    successMsg.style.display = "none";
+
+    // فحص صلاحية الحقول
+    if (!form.checkValidity()) {
+      errorMsg.style.display = "block";
+      return;
+    }
+
+    successMsg.style.display = "block";
+    spinner.style.display = "block";
+
+    // جمع البيانات
     const data = Object.fromEntries(new FormData(form).entries());
     data.timestamp = new Date().toLocaleString();
 
+    // إرسال إلى SheetDB
     const response = await fetch(sheetdb_api_url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ data })
+      body: JSON.stringify({ data: [data] })
     });
+
+    spinner.style.display = "none";
 
     if (response.ok) {
       form.style.display = "none";
       resultPage.style.display = "block";
-      telegramLink.href = telegramLinks[data.department]?.[data.year] || "#";
+
+      telegramLink.href =
+        telegramLinks[data.department]?.[data.year] || "#";
+
     } else {
-      alert("❌ حدث خطأ أثناء الحفظ، حاول مجددًا.");
+      errorMsg.textContent = "❌ حدث خطأ أثناء الحفظ، يرجى المحاولة مجددًا.";
+      errorMsg.style.display = "block";
     }
   });
 </script>
